@@ -7,17 +7,6 @@ import java.util.List;
 import java.util.Set;
 
 public class E4allMixinPlugin implements IMixinConfigPlugin {
-    private static final boolean HAS_SIGNATURES;
-    static {
-        boolean hasSignatures = false;
-        try {
-            Class.forName("net.minecraft.network.chat.MessageSignature", false, E4allMixinPlugin.class.getClassLoader());
-            hasSignatures = true;
-        } catch (Throwable e) {
-            // Pre-1.19
-        }
-        HAS_SIGNATURES = hasSignatures;
-    }
 
     @Override
     public void onLoad(String mixinPackage) {}
@@ -29,18 +18,6 @@ public class E4allMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        // Only apply NCR mixins if chat signatures exist in the game version
-        if (mixinClassName.contains(".ncr.")) {
-            if (!HAS_SIGNATURES) {
-                return false;
-            }
-            // Check if the target class exists without loading it via Class.forName,
-            // which would mark it as "already loaded" and prevent mixin transformation.
-            String classResourcePath = targetClassName.replace('.', '/') + ".class";
-            if (this.getClass().getClassLoader().getResource(classResourcePath) == null) {
-                return false; // Safely disable this mixin to prevent crash
-            }
-        }
         return true;
     }
 

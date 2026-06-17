@@ -15,11 +15,6 @@
     "ServerConnectionListenerMixin",
     "ServerLoginPacketListenerImplMixin",
     "WhitelistCommandMixin",
-    "ncr.MixinConnection",
-    "ncr.MixinPlayerList",
-    "ncr.MixinServerboundChatCommandPacket",
-    "ncr.MixinServerboundChatPacket",
-    "ncr.MixinServerboundChatSessionUpdatePacket",
     "PlayerListMixin"
   ],
   "injectors": {
@@ -31,7 +26,5 @@
     "ServerNameResolverMixin",
     "ShareToLanScreenMixin"
   ],
-  "server": [
-    "ncr.MixinDedicatedServer"
-  ]
+  "server": []
 }
