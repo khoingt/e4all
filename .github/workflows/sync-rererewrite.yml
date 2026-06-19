@@ -1,0 +1,34 @@
+name: Sync rererewrite from upstream
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: rererewrite
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Sync from upstream
+        run: |
+          git remote add upstream https://github.com/Synquox/e4all.git
+          git fetch upstream rererewrite
+
+          UPSTREAM_SHA=$(git rev-parse upstream/rererewrite)
+          LOCAL_SHA=$(git rev-parse rererewrite)
+
+          if [ "$UPSTREAM_SHA" = "$LOCAL_SHA" ]; then
+            echo "Already in sync."
+            exit 0
+          fi
+
+          echo "Upstream changed: $LOCAL_SHA → $UPSTREAM_SHA"
+          git checkout rererewrite
+          git reset --hard upstream/rererewrite
+          git push origin rererewrite
